@@ -42,7 +42,6 @@ angular.module('myApp')
 
 .controller('HomeController', ['$scope', '$geolocation', 'openweathermapFactory', '$http',
   function($scope, $geolocation, openweathermapFactory, $http) {
-    $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE";
     $scope.userDenied = false;
     $scope.loading = false;
     $scope.location = {};
@@ -59,6 +58,8 @@ angular.module('myApp')
         $scope.loading = false;
         $scope.position = data;
         console.log(data);
+        $scope.positionReady = true;
+
       }).catch(function(error) {
         console.log(error);
         toastr.error('Could not complete task', 'Some error happened. See console for details');
@@ -69,10 +70,13 @@ angular.module('myApp')
       $scope.loading = true;
       console.log($scope.location);
       doWeather($scope.location);
+      $scope.positionReady = true;
     }
 
     doWeather = function(position) {
       $scope.loading = true;
+      toastr.info('Going to fetch report', 'Hold on tight!');
+
       // get the weather report
       openweathermapFactory.getWeatherFromLocationByCoordinates({
         lat: position.coords.latitude,
