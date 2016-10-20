@@ -1,0 +1,23 @@
+{
+  "name": "khophisdev",
+  "version": "1.0.0",
+  "description": "Khophi's Dev",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Rexford <hello@khophi.co>",
+  "license": "ISC",
+  "dependencies": {
+    "browser-sync": "^2.12.12",
+    "connect-history-api-fallback": "^1.3.0",
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-clean-css": "^2.0.13",
+    "gulp-concat": "^2.6.0",
+    "gulp-install": "^0.6.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-uglify": "^2.0.0"
+  }
+}
