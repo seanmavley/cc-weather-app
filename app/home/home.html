@@ -7,58 +7,70 @@
                 <div ng-show="userDenied">
                     <h3 class="lead">Awwww, you denied location access!</h3>
                     <p>
-                        Okay, how about you provide the specific location you want watch report from?
+                        Okay, how about you provide the specific location you want weather report from?
                     </p>
-                    <form ng-submit="manualRequest();">
+                    <label>Select way
+                        <select ng-model="approach">
+                            <option value="manual">Manual values</option>
+                            <option value="city">Enter City Name</option>
+                        </select>
+                    </label>
+                    <form name="ManualForm" ng-submit="requestCoord()" ng-show="approach === 'manual'">
                         <div class="row">
                             <div class="medium-6 columns">
-                                <label>Event host
-                                    <input list='citiesList' ng-model="location.name" type='text' placeholder="Individual or Organization" autocomplete />
-                                    <datalist id="citiesList" name="citiesList">
-                                        <option></option>
-                                        <option ng-repeat="item in cities" value="{{ item.name }}, {{ item.country }}">{{ item.name }}</option>
-                                    </datalist>
-                                    <span class="form-error">
-                                  Don't leave this empty
-                                </span>
-                                </label>
-                            </div>
-                            <div class="medium-6 columns">
                                 <label>Latitude
-                                    <input type="text" placeholder="e.g -5.20929302" ng-model="location.latitude">
+                                    <input type="text" placeholder="e.g -5.20929302" ng-model="location.coords.latitude">
                                 </label>
                             </div>
                             <div class="medium-6 columns">
                                 <label>Longitude
-                                    <input type="text" placeholder="e.g 3.02938409" ng-model="location.longitude">
+                                    <input type="text" placeholder="e.g 3.02938409" ng-model="location.coords.longitude">
                                 </label>
                             </div>
                             <div class="small-12 column">
-                                <button type="submit" name="Send" class="button">Submit</button>
+                                <input type="submit" name="Send" class="button">
+                            </div>
+                        </div>
+                    </form>
+                    <form name="CitiForm" ng-submit="requestCity()" ng-show="approach === 'city'">
+                        <div class="row">
+                            <div class="medium-6 columns">
+                                <label>Enter City Name
+                                    <input list='citiesList' required ng-model="location.name" type='text' placeholder="Individual or Organization" autocomplete />
+                                    <datalist id="citiesList" name="citiesList">
+                                        <option></option>
+                                        <option ng-repeat="item in cities" value="{{ item.name }}, {{ item.country }}">{{ item.name }}</option>
+                                    </datalist>
+                                </label>
+                            </div>
+                            <div class="small-12 column">
+                                <input type="submit" name="Send" class="button">
                             </div>
                         </div>
                     </form>
                 </div>
                 <div ng-show="position">
-                    <h5 class="lead">Here's your location</h5> Your latitude is: <strong>{{ position.coords.latitude }}</strong> and longitude is: <strong>{{ position.coords.longitude }}</strong>
+                    <h5 class="lead">Here's your location</h5>
+                    <p>Your latitude is: <strong>{{ position.coords.latitude || position.data.coord.lat }}</strong> and longitude is: <strong>{{ position.coords.longitude || position.data.coord.lon }}</strong>
+                    </p>
                     <h4 class="lead">
                         and here's the weather report
                     </h4>
                     <div class="row">
                         <div class="medium-6 columns">
-                            Location: {{ weather.data.name }}
-                            <br> Country Code: {{ weather.data.sys.country}}
-                            <br> Weather: {{ weather.data.weather[0].description }}, {{ weather.data.weather.description }}
-                            <br> Wind: Travelling at {{ weather.data.wind.speed }} speed at {{ weather.data.wind.deg }} degrees
+                            Location: {{ position.data.name }}
+                            <br> Country Code: {{ position.data.sys.country}}
+                            <br> position: {{ position.data.weather[0].description }}
+                            <br> Wind: Travelling at {{ position.data.wind.speed }} speed at {{ position.data.wind.deg }} degrees
                         </div>
                         <div class="medium-6 columns">
-                            Ground Level: {{ weather.data.main.grnd_level }}
-                            <br> Humidity: {{ weather.data.main.humidity }}
-                            <br> Pressure: {{ weather.data.main.pressure }}
-                            <br> Sea Level: {{ weather.data.main.sea_level }}
-                            <br> Temp: {{ weather.main.data.temp }}
-                            <br> Max Temperature: {{ weather.data.main.temp_max }}
-                            <br> Min Temperature: {{ weather.data.main.temp_min }}
+                            Ground Level: {{ position.data.main.grnd_level }}
+                            <br> Humidity: {{ position.data.main.humidity }}
+                            <br> Pressure: {{ position.data.main.pressure }}
+                            <br> Sea Level: {{ position.data.main.sea_level }}
+                            <br> Temp: {{ position.main.data.temp }}
+                            <br> Max Temperature: {{ position.data.main.temp_max }}
+                            <br> Min Temperature: {{ position.data.main.temp_min }}
                         </div>
                         <div class="small-12 columns">
                             <hr>
@@ -66,6 +78,11 @@
                                 <marker position="[{{ position.coords.latitude }}, {{ position.coords.longitude }}]" title="My location" animation="Animation.BOUNCE"></marker>
                             </ng-map>
                         </div>
+                    </div>
+                </div>
+                <div ng-show="loading" class="float-center">
+                    <div class="loader">
+                        <span>{</span><span>}</span>
                     </div>
                 </div>
                 <div ng-show="!position && !userDenied" class="float-center">

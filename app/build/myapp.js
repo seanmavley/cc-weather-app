@@ -44,19 +44,45 @@ angular.module('myApp')
   function($scope, $geolocation, openweathermapFactory, $http) {
     $scope.googleMapsUrl = "https://maps.googleapis.com/maps/api/js?key=YOUR_KEY_HERE";
     $scope.userDenied = false;
+    $scope.loading = false;
     $scope.location = {};
-    // get the location from User
-    manualRequest = function() {
+    
+    // get the specified location by lat,long from user
+    $scope.requestCity = function() {
+      $scope.loading = true;
       console.log($scope.location);
-      // openweathermapFactory.getWeatherFromCitySearchByName({
-      //   q: location.name,
-      //   appid: "95fce1ea5c2190183b85f3e518de44cd"
-      // }).then(function(data) {
-      //   $scope.weather = data;
-      //   console.log(data);
-      // }).catch(function(error) {
-      //   console.log(error);
-      // })
+      openweathermapFactory.getWeatherFromCitySearchByName({
+        q: $scope.location.name,
+        appid: "95fce1ea5c2190183b85f3e518de44cd"
+      }).then(function(data) {
+        $scope.loading = false;
+        $scope.position = data;
+        console.log(data);
+      }).catch(function(error) {
+        console.log(error);
+      })
+    };
+
+    $scope.requestCoord = function() {
+      $scope.loading = true;
+      console.log($scope.location);
+      doWeather($scope.location);
+    }
+
+    doWeather = function(position) {
+      $scope.loading = true;
+      // get the weather report
+      openweathermapFactory.getWeatherFromLocationByCoordinates({
+        lat: position.coords.latitude,
+        lon: position.coords.longitude,
+        appid: "95fce1ea5c2190183b85f3e518de44cd"
+      }).then(function(data) {
+        $scope.loading = false;
+        $scope.position = data;
+        console.log(data);
+      }).catch(function(error) {
+        console.log(error);
+      })
     };
 
     $geolocation.getCurrentPosition({
@@ -68,18 +94,9 @@ angular.module('myApp')
         // start rendering <ng-map></ng-map> 
         // only after position above are available
         $scope.positionReady = true;
+        // get the location with coordinates
+        doWeather(position);
 
-        // get the weather report
-        openweathermapFactory.getWeatherFromLocationByCoordinates({
-          lat: position.coords.latitude,
-          lon: position.coords.longitude,
-          appid: "95fce1ea5c2190183b85f3e518de44cd"
-        }).then(function(data) {
-          $scope.weather = data;
-          console.log(data);
-        }).catch(function(error) {
-          console.log(error);
-        })
       })
       .catch(function(error) {
         console.log(error);
