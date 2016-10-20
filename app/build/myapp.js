@@ -46,8 +46,9 @@ angular.module('myApp')
     $scope.userDenied = false;
     $scope.loading = false;
     $scope.location = {};
-    
-    // get the specified location by lat,long from user
+
+    // get the specified location by City Name
+    // List of 2,000 cities are provided.
     $scope.requestCity = function() {
       $scope.loading = true;
       console.log($scope.location);
@@ -60,6 +61,7 @@ angular.module('myApp')
         console.log(data);
       }).catch(function(error) {
         console.log(error);
+        toastr.error('Could not complete task', 'Some error happened. See console for details');
       })
     };
 
@@ -80,8 +82,10 @@ angular.module('myApp')
         $scope.loading = false;
         $scope.position = data;
         console.log(data);
+        toastr.info('Weather report is ready');
       }).catch(function(error) {
         console.log(error);
+        toastr.error('Could not complete task', 'Some error happened. See console for details');
       })
     };
 
@@ -101,13 +105,16 @@ angular.module('myApp')
       .catch(function(error) {
         console.log(error);
         $scope.userDenied = true;
-        // only of 2,000 in number to speed up things.
+        toastr.error('You denied access to Geolocation. Switching to manual mode.', 'No location available')
+          // only of 2,000 in number to speed up things.
         $http.get('./assets/city.list.json')
           .then(function(data) {
             // console.log(data.data);
             $scope.cities = data.data
+            toastr.info('List of cities finished loading', 'Cities are loaded.')
           })
           .catch(function(error) {
+            toastr.error('Could not complete task', 'Some error happened. See console for details');
             console.log(error);
           })
       })
