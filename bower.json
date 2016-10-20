@@ -18,7 +18,10 @@
     "ngMeta": "^0.3.9",
     "angular-cookie": "^4.1.0",
     "foundation-sites": "^6.2.3",
-    "foundation-icon-fonts": "*"
+    "foundation-icon-fonts": "*",
+    "ngGeolocation": "^0.0.8",
+    "angular-openweathermap-api-factory": "^0.6.0",
+    "ngmap": "^1.17.8"
   },
   "ignore": [
     "**/.*",

@@ -1,4 +1,4 @@
-angular.module('myApp', ['ui.router', 'ngProgress', 'ui.router.title'])
+angular.module('myApp', ['ui.router', 'ngGeolocation', 'ngProgress', 'ui.router.title', 'jtt_openweathermap', 'ngMap'])
 
 .config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
   function($stateProvider, $urlRouterProvider, $locationProvider) {
